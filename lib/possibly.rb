@@ -5,7 +5,7 @@ module Maybe
     ([:each] + Enumerable.instance_methods).each do |enumerable_method|
       define_method(enumerable_method) do |*args, &block|
         res = __enumerable_value.send(enumerable_method, *args, &block)
-        res.respond_to?(:each) ? Maybe(res.first) : res
+        res.respond_to?(:each) ? Maybe(res.first) : (res.nil? ? Maybe(res) : res)
       end
     end
 
@@ -50,6 +50,7 @@ module Maybe
     alias_method :eql?, :==
 
     def method_missing(method_sym, *args, &block)
+      return None.new unless @value.respond_to? method_sym
       map { |value| value.send(method_sym, *args, &block) }
     end
 

@@ -103,5 +103,10 @@ describe "possibly" do
       expect(Some("maybe").upcase.get).to eql("MAYBE")
       expect(Some([1, 2, 3]).map { |arr| arr.map { |v| v * v } }.get).to eql([1, 4, 9])
     end
+
+    it "forwards None" do
+      expect(Some(1).does_not_exist.is_a?(Maybe::None)).to eql(true)
+      expect(Some(1).does_not_exist.first.is_a?(Maybe::None)).to eql(true)
+    end
   end
 end
